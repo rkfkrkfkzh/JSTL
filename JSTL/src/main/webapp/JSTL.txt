@@ -1,0 +1,209 @@
+JSTL
+JSTL은 JSP표준 태그 라이브러리로 유용하고 자주 사용되는 사용자 정의 태그들을 묶어서 제공하는 
+API 이다. 그래서 기존에 사용했던 HTML 태그 이외에 for문, if문 등의 기능을 구현한 태그를 사용할
+수 있다. 이를 사용하는 JSP파일은 프로그램의 흐름을 제어하기 위해서 작성한 자바코드를 제거하고
+태그로 대체할 수 있다. 이렇게 함으로서 JSP페이지에 여러 언어 표현이 사용되는 것을 막아주고 
+태그 형태로 일관된 표현을 할 수 있어서 코드의 가독성을 높일 수 있다. 
+
+코어 
+변수 제어와 프로그램의 흐름을 제어하는 태그, URL, 제어 , 출력 태그들로 구성된다. 코어 태그들이
+정의된 URL은 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>으로 접두사는 
+c를 사용한다. 접두사는 태그의 종류를 나타내는 것으로 코어는 C, XML은 x등으로 미리 정의되어
+있다. JSTL의 태그를 사용하려면 먼저 taglic디렉티브 태그 라이브러리를 설정해야 하느데 이때 
+URL과 접두사가 필요하다.  taglib 디렉티브를 다음과 같이 작성해야 한다.  
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+코어의 태그들 
+
+<c:set> </c:set>
+변수 선언 및 값을 할당할 수 있다. 이 태그로 변수를 선언하면 스코프객체 
+pageContext,  request, session, application 중 하나에 저장된다. 저장될 스코프 객체를 지정하는 
+속성은 scope로 지정하지 않으면 pageContext로 저장된다. 
+
+<속성>
+var : 변수 이름 
+value :  변수에 저장할 값 
+scope : 저장될 스코프 객체 
+target : 멤버 변수를 변경할 맵이나 객체명 
+property : 변경할 멤버 변수명 
+
+사용 예 )
+<c:set var ="x" value="<%=x%>" scope="request"/>
+<% %>안에서 선언한 x의 값을 request에 x1에 이름으로 저장 
+
+<c:remove/>
+변수를 스코프 객체에서 제거한다. 
+
+<속성 >
+var : 삭제할 변수명 
+scope :  삭제할 대상이 저장된 스코프 
+
+사용예) 
+<c:remove var ="x1" scope="request"/>
+request에서 변수 x1을 삭제 
+
+<c:if></c:if>
+i문 기능인 조건에 따른 실행을 제공하는 태그이다. 
+
+<속성>
+test : 조건으로 true나 false가 나올 수 있는 수식 
+var : 조건의 결과를 저장할 변수명 
+scope : 스코프 객체 
+
+사용 예)
+<c:if test="${x==10} >
+    실행문 
+</c:if>
+->x가 10이면 if태크 사이의 실행문을 실행하고, x가 10이 아니면 실행되지 않는다. 
+
+
+<c:choose> </c:choose>
+<c:if>태그는 조건을 만족하는 것만 제어할 수 있고 조건을 만족하지 않는 것은 제어할 수 없다. 
+자바 if문에서 else가 없는 것과 같다. <c:choose>태그는 만족할 때와 그렇지 않을 때를 구현할 
+수 있다. 이 태그는 속성 없이 내부에 조건을 체크할 <c:when> </c:otherwise>태그를 포함한다.
+
+사용 예) 
+
+<c:choose> 
+
+<c:when test="조건">
+조건 만족시 실행할 문장 
+</c:when>
+
+<c:otherwise>
+조건 불만족 시 실행할 문장 
+</c:otherwise>
+</c:choose>
+   
+
+<c:forEach> </c:forEach>
+반복 처리에 사용되는 태그로 자바의 for문과 흡사하다. 
+
+<속성>
+items : 반복 처리할 대상이 배열이나 리스트일 때 대상 배열 또는 리스트 
+var : items에서 꺼낸 객체 하나를 저장할 변수명 
+varStatus : 반복의 상태를 저장할 변수명 
+begin : 반복 횟수를 제어할 변수의 시작 값 
+end : 반복 횟수를 제어할 변수의 증감 값 
+step : 반복 횟수를 제어할 변수의 증감 값 
+
+
+
+사용 예 
+
+<c:forEach var ="i" begin="i" end="3"> 
+
+${ i }<br>
+
+</c:forEach>
+
+-> for문에 의해서 숫자 1,2,3 이 새로로 출력된다. 
+
+
+<c:forEach var ="m" item="${list}"> 
+
+${m.name } ,
+
+</c:forEach>
+
+->리스트의 객체를 하나씩 꺼내어 m에 저장하고,m의 name멤버를 출력한다. 반복횟수는 list의 
+  길이만큼이므로 리스트에 저장된 모든 객체의 name을 출력한다. 
+
+
+현제 반복 상태를 확인하는 속성 
+
+begin : 반복 횟수를 제어할 변수의 시작 값 
+end : 반복 횟수를 제어할 변수의 증감 값 
+step : 반복 횟수를 제어할 변수의 증감 값 
+index : 반복 횟수를 제어하는 변수의 현재 값 
+count : 현제까지 반복한 횟수 
+first :현제 반복이 처음인지를 true/false로 반환 
+last : 현재 반복이 마지막인지를 true/false로 반환 
+current :현재 반복에 사용되는 객체 
+varStatus : 반복의 상태를 저장할 변수명 
+
+사용 예)
+<c:forEach var ="s" items="${strings}"  varStatus="status"> 
+
+반복횟수 : ${status.count }<br>
+
+<c:if test="${status.first}">
+첫 실행입니다. 
+
+</c:if>
+</c:forEach>
+
+->리스트 strings에 저장된 문자열을 하나씩 s에 저장하여 반복한다. 반복의 상태는 변수status에 
+  저장하므로 반복 횟수는 ${status.count}로 표현하고 첫 실행인지를 학인하려면 
+<c:if test="${status.first}">코드로 할 수 있다. 
+
+
+<c:forTokens> </c:forTokens>
+하나의 문자열을 지정한 구분자로 끊어서 각 문자열에 대해 반복 처리할 수 있다. delim속성을 
+제외하면 <c:forEach>와 거의 비슷하다. 
+
+
+<속성>  
+items : 반복 처리할 대상이 배열이나 리스트일 때 대상 배열 또는 리스트 
+delim : 토큰의 구분자 
+var : items에서 꺼낸 객체 하나를 저장할 변수명 
+begin : 반복 횟수를 제어할 변수의 시작 값 
+end : 반복 횟수를 제어할 변수의 증감 값 
+step : 반복 횟수를 제어할 변수의 증감 값 
+varStatus : 반복의 상태를 저장할 변수명 
+
+<c:url> </c:url>
+URL을 생성하는 태그이다. 
+
+<속성>
+var : URL을 저장할 변수 이름 
+value :  저장할 URL 값 
+scope : 변수를 저장할 스코프 객체 
+
+
+<사용 예>
+<c:url var="url" value="/member/login.jsp"/>
+->변수 url에 "/member/login.jsp"저장 
+
+
+<c:import> </c:import>
+다른 웹 페이지를 url 속성에 지정한 파일 내용을 해당 태그 위치에 출력하거나 변수에 저장한다. 
+
+<속성>
+URL : import 할 페이지 URL 
+value :  import페이지의 내용을 저장할 변수 이름  
+scope : 저장할  스코프 객체 
+
+<사용 예>
+<c:import url="/importPage.jsp"></c:import>
+-현재 위치에 "/importPage.jsp"페이지를 출력 
+
+
+<c:param></c:param>
+다른 페이지에 파라메터를 전달할 수 있다. 
+
+<속성>
+name : 파라메터 이름 
+value : 파라메터 값 
+
+<사용 예>
+
+<c:param name="name" value="aaa"/>
+파라메터 "name"의 값 "aaa"
+
+<c:redirct> </c:redirect>
+다른 페이지로 redirect 방식으로 이동한다. 
+
+<속성>
+url : 이동할 페이지 URL 
+
+<사용 예>
+<c:redirect url="member/menu.jsp">
+-> "member/menu.jsp"로 redirect 방식으로 이동 
+
+
+
+
+
+ 
